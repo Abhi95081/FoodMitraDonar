@@ -6,10 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.foodmitra.Screens.AddPage
 import com.example.foodmitra.Screens.HomePage
-import com.example.foodmitradonar.Screens.LoginPage
 import com.example.foodmitra.Screens.ProfilePage
 import com.example.foodmitra.Screens.SearchPage
 import com.example.foodmitra.SplashScreen
+import com.example.foodmitradonar.Screens.LoginPage
 import com.example.new_hoe.NavigationBar.BottomNav
 import com.example.new_hoe.Routes.Routes
 

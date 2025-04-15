@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.foodmitradonar.R
+import com.example.new_hoe.Routes.Routes
 import java.io.InputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,9 +51,8 @@ import java.io.InputStream
 fun LoginPage(navController: NavController) {
     val context = LocalContext.current
 
-    var ngoName by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var upiMobile by remember { mutableStateOf("") }
+    var donorName by remember { mutableStateOf("") }
+    var mobileNumber by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
 
@@ -77,7 +77,7 @@ fun LoginPage(navController: NavController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Register Your NGO",
+            text = "Register as Donor",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF388E3C)
@@ -97,13 +97,13 @@ fun LoginPage(navController: NavController) {
             if (bitmap != null) {
                 Image(
                     bitmap = bitmap!!.asImageBitmap(),
-                    contentDescription = "Selected NGO Image",
+                    contentDescription = "Selected Donor Image",
                     modifier = Modifier.fillMaxSize()
                 )
             } else {
                 Image(
-                    painter = painterResource(id = R.drawable.ngo),
-                    contentDescription = "Default NGO Image",
+                    painter = painterResource(id = R.drawable.img),  // Add a default image for donor
+                    contentDescription = "Default Donor Image",
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -112,38 +112,27 @@ fun LoginPage(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         if (bitmap == null) {
-            Text(text = "Click Image to Upload your NGO Image", color = Color.Red)
+            Text(text = "Click Image to Upload your Donor Image", color = Color.Red)
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-
-        // NGO Name
+        // Donor Name
         OutlinedTextField(
-            value = ngoName,
-            onValueChange = { ngoName = it },
-            label = { Text("NGO Name") },
+            value = donorName,
+            onValueChange = { donorName = it },
+            label = { Text("Donor Name") },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Location
+        // Mobile Number
         OutlinedTextField(
-            value = location,
-            onValueChange = { location = it },
-            label = { Text("Location") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // UPI Mobile Number
-        OutlinedTextField(
-            value = upiMobile,
+            value = mobileNumber,
             onValueChange = {
-                if (it.length <= 10 && it.all { c -> c.isDigit() }) upiMobile = it
+                if (it.length <= 10 && it.all { c -> c.isDigit() }) mobileNumber = it
             },
-            label = { Text("UPI Mobile Number") },
+            label = { Text("Mobile Number") },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
@@ -153,14 +142,10 @@ fun LoginPage(navController: NavController) {
         // Submit Button
         Button(
             onClick = {
-                if (
-                    ngoName.isNotBlank() &&
-                    location.isNotBlank() &&
-                    upiMobile.length == 10
-                ) {
-                    Toast.makeText(context, "NGO Registered!", Toast.LENGTH_SHORT).show()
+                if (donorName.isNotBlank() && mobileNumber.length == 10) {
+                    Toast.makeText(context, "Donor Registered!", Toast.LENGTH_SHORT).show()
                     navController.navigate("bottom_nav") {
-                        popUpTo("ngo_register") { inclusive = true }
+                        popUpTo("donor_register") { inclusive = true }
                     }
                 } else {
                     Toast.makeText(context, "Please complete all fields correctly", Toast.LENGTH_SHORT).show()
