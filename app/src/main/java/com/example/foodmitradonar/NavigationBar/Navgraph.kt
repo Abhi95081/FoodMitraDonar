@@ -9,7 +9,7 @@ import com.example.foodmitra.Screens.HomePage
 import com.example.foodmitra.Screens.ProfilePage
 import com.example.foodmitra.Screens.SearchPage
 import com.example.foodmitra.SplashScreen
-import com.example.foodmitradonar.Screens.LoginPage
+import com.example.foodmitradonar.Screens.DonorRegistrationScreen
 import com.example.new_hoe.NavigationBar.BottomNav
 import com.example.new_hoe.Routes.Routes
 
@@ -29,7 +29,7 @@ fun Navgraph(navController: NavHostController) {
             SearchPage()
         }
         composable(Routes.ProfilePage.route) {
-            ProfilePage()
+            ProfilePage(navController)
         }
         composable(Routes.AddPage.route) {
             AddPage()
@@ -37,8 +37,8 @@ fun Navgraph(navController: NavHostController) {
         composable(Routes.BottomNav.route) {
             BottomNav(navController)
         }
-        composable(Routes.LoginPage.route) {
-            LoginPage(navController)
+        composable(Routes.DonorRegistrationScreen.route) {
+            DonorRegistrationScreen(navController)
         }
 
 

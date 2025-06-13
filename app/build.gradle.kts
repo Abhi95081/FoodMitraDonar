@@ -86,4 +86,7 @@ dependencies {
 
     implementation("io.github.raamcosta.compose-destinations:core:1.8.36-beta") // Navigation
     implementation("com.google.accompanist:accompanist-permissions:0.31.0-alpha") // Permissions
+
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

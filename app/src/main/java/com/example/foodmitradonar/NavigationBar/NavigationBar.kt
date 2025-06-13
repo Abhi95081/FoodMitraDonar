@@ -24,6 +24,20 @@ import com.example.foodmitra.Screens.ProfilePage
 import com.example.foodmitra.Screens.SearchPage
 import com.example.new_hoe.NavigationBar.BottomNavItem
 import com.example.new_hoe.Routes.Routes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 @Composable
@@ -47,7 +61,7 @@ fun BottomNav(navController: NavHostController) {
                 AddPage()
             }
             composable(Routes.ProfilePage.route) {
-                ProfilePage()
+                ProfilePage(navController)
             }
         }
 
@@ -56,51 +70,59 @@ fun BottomNav(navController: NavHostController) {
 }
 
 @Composable
-fun MyBottomBar(navController: NavHostController){
+fun MyBottomBar(navController: NavHostController) {
+    val backStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry.value?.destination?.route
 
-    val backStackEntry = navController.currentBackStackEntry
-    val currentRoute = backStackEntry?.destination?.route
-
-    val list = listOf(
-
-        BottomNavItem(
-            "home",
-            Routes.HomePage.route,
-            Icons.Rounded.Home
-        ),
-        BottomNavItem(
-            "Search",
-            Routes.SearchPage.route,
-            Icons.Rounded.Search
-        ),
-        BottomNavItem(
-            "Add Threads",
-            Routes.AddPage.route,
-            Icons.Rounded.Add
-        ),
-        BottomNavItem(
-            "Profile",
-            Routes.ProfilePage.route,
-            Icons.Rounded.Person
-        )
+    val items = listOf(
+        BottomNavItem("Home", Routes.HomePage.route, Icons.Rounded.Home),
+        BottomNavItem("Search", Routes.SearchPage.route, Icons.Rounded.Search),
+        BottomNavItem("Add", Routes.AddPage.route, Icons.Rounded.Add),
+        BottomNavItem("Profile", Routes.ProfilePage.route, Icons.Rounded.Person)
     )
 
-    BottomAppBar {
-        list.forEach{
-            val selected  = it.route == backStackEntry?.destination?.route
+    BottomAppBar(
+        tonalElevation = 8.dp,
+    ) {
+        items.forEach { item ->
+            val selected = item.route == currentRoute
 
-            NavigationBarItem(selected = selected,
+            val iconSize by animateDpAsState(if (selected) 28.dp else 24.dp)
+            val iconTint by animateColorAsState(
+                if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            )
+            val textAlpha by animateFloatAsState(if (selected) 1f else 0f)
+
+            NavigationBarItem(
+                selected = selected,
                 onClick = {
-                    navController.navigate(it.route){
-                        popUpTo(navController.graph.findStartDestination().id){
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
                         launchSingleTop = true
+                        restoreState = true
                     }
                 },
                 icon = {
-                    Icon(imageVector = it.icon, contentDescription = it.title)
-                })
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.title,
+                            tint = iconTint,
+                            modifier = Modifier.size(iconSize)
+                        )
+                        AnimatedVisibility(visible = selected) {
+                            Text(
+                                text = item.title,
+                                fontSize = 12.sp,
+                                color = iconTint,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
+                }
+            )
         }
     }
 }
