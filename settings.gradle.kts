@@ -11,14 +11,16 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        // Required for Supabase Kotlin
+        maven("https://jitpack.io")
     }
 }
 
 rootProject.name = "FoodMitraDonar"
 include(":app")
- 
