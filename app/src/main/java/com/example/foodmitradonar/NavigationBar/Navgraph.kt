@@ -32,7 +32,7 @@ fun Navgraph(navController: NavHostController) {
             ProfilePage(navController)
         }
         composable(Routes.AddPage.route) {
-            AddPage()
+            AddPage(onUploadSuccess = { /* Handle success, e.g., navigate back or show a message */ })
         }
         composable(Routes.BottomNav.route) {
             BottomNav(navController)
