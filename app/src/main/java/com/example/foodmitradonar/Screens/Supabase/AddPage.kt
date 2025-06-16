@@ -5,27 +5,19 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.foodmitradonar.Screens.Supabase.SupabaseManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPage(onUploadSuccess: () -> Unit) {
     val context = LocalContext.current
@@ -36,12 +28,15 @@ fun AddPage(onUploadSuccess: () -> Unit) {
     var duration by remember { mutableStateOf("") }
     var mobile by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("General") }
+    var uploading by remember { mutableStateOf(false) }
+
+    val categories = listOf("General", "Groceries", "Leftover", "Cooked Food")
+    var expanded by remember { mutableStateOf(false) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) {
-        imageUri = it
-    }
+    ) { imageUri = it }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Button(onClick = { imagePickerLauncher.launch("image/*") }) {
@@ -64,6 +59,25 @@ fun AddPage(onUploadSuccess: () -> Unit) {
         OutlinedTextField(value = mobile, onValueChange = { mobile = it }, label = { Text("Mobile Number") })
         OutlinedTextField(value = location, onValueChange = { location = it }, label = { Text("Location") })
 
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+            OutlinedTextField(
+                value = category,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Category") },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                categories.forEach {
+                    DropdownMenuItem(text = { Text(it) }, onClick = {
+                        category = it
+                        expanded = false
+                    })
+                }
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
@@ -72,6 +86,7 @@ fun AddPage(onUploadSuccess: () -> Unit) {
                 return@Button
             }
 
+            uploading = true
             scope.launch {
                 val success = SupabaseManager.uploadDonation(
                     imageUri!!,
@@ -79,17 +94,32 @@ fun AddPage(onUploadSuccess: () -> Unit) {
                     duration,
                     mobile,
                     location,
-                    context
+                    context,
+                    category
                 )
-                if (success) {
-                    Toast.makeText(context, "Uploaded successfully", Toast.LENGTH_SHORT).show()
-                    onUploadSuccess()
-                } else {
-                    Toast.makeText(context, "Upload failed", Toast.LENGTH_SHORT).show()
+
+                withContext(Dispatchers.Main) {
+                    uploading = false
+                    if (success) {
+                        Toast.makeText(context, "Uploaded successfully", Toast.LENGTH_SHORT).show()
+                        imageUri = null
+                        quantity = ""
+                        duration = ""
+                        mobile = ""
+                        location = ""
+                        category = "General"
+                        onUploadSuccess()
+                    } else {
+                        Toast.makeText(context, "Upload failed", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }) {
-            Text("Submit")
+            if (uploading) {
+                CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(10.dp))
+            }
+            Text(if (uploading) "Uploading..." else "Submit")
         }
     }
 }
