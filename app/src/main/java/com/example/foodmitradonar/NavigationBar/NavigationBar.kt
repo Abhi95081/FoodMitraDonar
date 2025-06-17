@@ -58,7 +58,7 @@ fun BottomNav(navController: NavHostController) {
             }
 
             composable(Routes.AddPage.route) {
-                AddPage(onUploadSuccess = { navController.navigate(Routes.BottomNav.route) })
+                AddPage()
             }
             composable(Routes.ProfilePage.route) {
                 ProfilePage(navController)
