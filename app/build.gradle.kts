@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.foodmitradonar"
-    compileSdk = 36 // ✅ Use latest stable (36 is preview)
+    compileSdk = 36 // Use stable, not preview
 
     defaultConfig {
         applicationId = "com.example.foodmitradonar"
@@ -13,7 +13,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -52,6 +51,7 @@ dependencies {
     // Jetpack Compose BOM
     implementation(platform(libs.androidx.compose.bom))
 
+    // Compose + Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -67,9 +67,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    // Appwrite
-    implementation("io.appwrite:sdk-for-android:4.0.0")
+    // ✅ Appwrite SDK
+    implementation(libs.appwrite)
 
+    // ✅ Required OkHttp dependencies (Appwrite relies on these)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     // Coroutines & JSON
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -81,8 +84,7 @@ dependencies {
     // Image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    // Destinations Navigation (Optional)
-    implementation("io.github.raamcosta.compose-destinations:core:1.8.36-beta")
+    // DataStore
     implementation(libs.androidx.datastore.core.android)
 
     // Testing
