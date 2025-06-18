@@ -67,13 +67,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    // Supabase + Ktor
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:1.4.0")
-    implementation("io.github.jan-tennert.supabase:storage-kt:1.4.0")
-    implementation("io.github.jan-tennert.supabase:realtime-kt:1.4.0")
-    implementation("io.ktor:ktor-client-okhttp:2.3.5")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.5")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.5")
+    // Appwrite
+    implementation("io.appwrite:sdk-for-android:4.0.0")
+
 
     // Coroutines & JSON
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
